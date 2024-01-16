@@ -170,7 +170,7 @@ public class FileTransferApp extends JFrame {
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
         progressBar.setVisible(false);
-        encryptImage=new JButton("Cryptage Image");
+        encryptImage=new JButton("Cryptage Image AES 128");
         encryptImage.setBackground(white);
         encryptImage.setForeground(black);
         encryptImage.addActionListener(new ActionListener() {
