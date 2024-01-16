@@ -1,3 +1,3 @@
 @echo off
-java Main
+java Main 
 pause

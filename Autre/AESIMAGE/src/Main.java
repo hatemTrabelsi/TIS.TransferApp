@@ -2,6 +2,8 @@ package Autre.AESIMAGE.src;
 
 import Autre.AESIMAGE.src.AES_Demo;
 
+import javax.swing.*;
+
 public class Main {
         /**
      * @param args the command line arguments
@@ -36,4 +38,5 @@ public class Main {
                 new AES_Demo().setVisible(true);
             }
         });
+
     }}

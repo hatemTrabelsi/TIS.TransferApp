@@ -6,13 +6,16 @@ package Autre.AESIMAGE.src;/*
 
 import Autre.AESIMAGE.src.AES;
 
+import java.awt.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
+import javax.swing.*;
+import javax.imageio.ImageIO;
+
 
 public class AES_Demo extends javax.swing.JFrame {
 
@@ -32,7 +35,7 @@ public class AES_Demo extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+        setResizable(false);
         jFileChooser1 = new javax.swing.JFileChooser();
         jFileChooser2 = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
@@ -50,10 +53,12 @@ public class AES_Demo extends javax.swing.JFrame {
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("AES");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cryptage Image AES 128");
 
-        jButton1.setText("Browse Files");
+        jButton1.setText("Choisir une image");
+        jButton1.setBackground(Color.white);
+        jButton1.setForeground(Color.black);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -62,15 +67,18 @@ public class AES_Demo extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setText("Decryption Time (ms)");
+        jLabel1.setText("Temps de decryptage en (ms)");
 
-        jLabel2.setText("Encryption Time (ms)");
+        jLabel2.setText("Temps de Cryptage en (ms)");
 
-        jLabel3.setText("Encryption and Decryption");
+        jLabel3.setText("Cryptage et Decryptage");
 
-        jRadioButton2.setText("4 Round AES");
-
-        jButton2.setText("Begin AES");
+        jRadioButton2.setText("10 Round AES");
+        jRadioButton2.setBackground(new Color(200,200,250));
+        jRadioButton2.setForeground(Color.black);
+        jButton2.setText("Commencer AES");
+        jButton2.setForeground(Color.black);
+        jButton2.setBackground(Color.white);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -83,7 +91,9 @@ public class AES_Demo extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Choose Save Directory");
+        jButton3.setText("Choisir repertoire de sauvegarde");
+        jButton3.setBackground(Color.white);
+        jButton3.setForeground(Color.black);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -92,6 +102,7 @@ public class AES_Demo extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
+        jPanel2.setBackground(new Color(200,200,255));
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -145,9 +156,11 @@ public class AES_Demo extends javax.swing.JFrame {
         );
 
         jRadioButton1.setText("Preserve Image Header");
-
+        jRadioButton1.setSelected(true);
+        jRadioButton1.setVisible(false);
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
+        jPanel1.setBackground(new Color(200,200,255));
         jPanel1Layout.setHorizontalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -283,9 +296,7 @@ public class AES_Demo extends javax.swing.JFrame {
         int returnVal = jFileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooser1.getSelectedFile();
-            if (!file.canRead()) {
-                file.setReadable(true);
-            }
+
 
             // display file name in text field
             jTextField1.setText(file.getAbsolutePath());

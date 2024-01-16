@@ -1,7 +1,8 @@
+
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.io.*;
 import java.nio.file.*; 
 import java.util.*;
@@ -10,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import javax.crypto.*;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -18,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.time.LocalDateTime;
 import java.security.NoSuchAlgorithmException;
+import Autre.AESIMAGE.src.AES_Demo;
 
 public class FileTransferApp extends JFrame {
   private JTextField selectedFilePathTextField;
@@ -36,13 +37,15 @@ public class FileTransferApp extends JFrame {
   private JProgressBar progressBar;
   private JTextField ipTextField; 
   private Integer i = 0;
+  private JButton encryptImage;
   public FileTransferApp() {
-        setTitle("Application Desktop De Cryptage De Donnés");
+        setTitle("Application Desktop De Cryptage De Donnees");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         Color white = new Color(255, 255, 255);
         Color black = new Color(100, 100, 100);
         JPanel descriptionPanel = new JPanel();
+        JPanel serveurPanel = new JPanel();
         JPanel mainPanel = new JPanel() {
           @Override
           protected void paintComponent(Graphics g) {
@@ -55,7 +58,9 @@ public class FileTransferApp extends JFrame {
         mainPanel.setBounds(0, 0, 650, 400);
         descriptionPanel.setLayout(null);
         descriptionPanel.setBounds(5,5,630,135);
-        descriptionPanel.setBackground(white);
+        descriptionPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        descriptionPanel.setBackground(new Color(200,200,255));
+
         statusLabel = new JLabel();
         selectedFilePathTextField = new JTextField(20);
         selectedFilePathTextField.setEditable(false);
@@ -87,7 +92,7 @@ public class FileTransferApp extends JFrame {
         });
 
       ImageIcon encryptIcone = new ImageIcon(new ImageIcon("icones/encrypt.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-      encryptAndTransferButton = new JButton("Chiffrer et transférer",encryptIcone);
+      encryptAndTransferButton = new JButton("Chiffrer et transferer",encryptIcone);
       encryptAndTransferButton.setForeground(black);
       encryptAndTransferButton.setBackground(white);
       encryptAndTransferButton.addActionListener(new ActionListener() {
@@ -106,7 +111,7 @@ public class FileTransferApp extends JFrame {
               }
             }
         });
-      encryptButton = new JButton("Chiffrer", encryptIcone);
+      encryptButton = new JButton("Cryptage Locale", encryptIcone);
       encryptButton.setForeground(black);
       encryptButton.setBackground(white);
       encryptButton.addActionListener(new ActionListener() {
@@ -116,18 +121,18 @@ public class FileTransferApp extends JFrame {
                   try {
                       myKey = AESKeyGenerator.generateAESKey();
                       String encryptedFilePath = encryptFile(sourceFilePath);
-                      JOptionPane.showMessageDialog(null, "Le fichier a été crypter avec succées!");
+                      JOptionPane.showMessageDialog(null, "Le fichier a ete crypter avec succees!");
                   } catch (Exception ex) {
                       JOptionPane.showMessageDialog(null, "Erreur est survenue lors du cryptage " + ex.getMessage());
                   }
               } else {
-                  JOptionPane.showMessageDialog(null, "Merci de choisir un fichier à crypter");
+                  JOptionPane.showMessageDialog(null, "Merci de choisir un fichier a crypter");
               }
           }
       });
 
       ImageIcon decryptIcone = new ImageIcon(new ImageIcon("icones/decrypt.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-      decryptAndSaveButton = new JButton("Décrypter et enregistrer",decryptIcone);
+      decryptAndSaveButton = new JButton("Decrypter et enregistrer",decryptIcone);
       decryptAndSaveButton.setBackground(white);
       decryptAndSaveButton.setForeground(black);
       decryptAndSaveButton.addActionListener(new ActionListener() {
@@ -135,7 +140,7 @@ public class FileTransferApp extends JFrame {
                 decryptAndSave();
             }
       });
-      decryptButton = new JButton("Décrypter",decryptIcone);
+      decryptButton = new JButton("Decrypter",decryptIcone);
       decryptButton.setBackground(white);
       decryptButton.setForeground(black);
       decryptButton.addActionListener(new ActionListener() {
@@ -143,9 +148,9 @@ public class FileTransferApp extends JFrame {
               String sourceFilePath = selectedFilePathTextField.getText();
               try {
                   decryptFile(sourceFilePath);
-                  JOptionPane.showMessageDialog(null, "Le fichier a été décrypter avec succées!");
+                  JOptionPane.showMessageDialog(null, "Le fichier a ete decrypter avec succees!");
               } catch (Exception ex) {
-                  JOptionPane.showMessageDialog(null, "Erreur est survenue lors du décryptage " + ex.getMessage());
+                  JOptionPane.showMessageDialog(null, "Erreur est survenue lors du decryptage " + ex.getMessage());
               }
           }
       });
@@ -153,7 +158,7 @@ public class FileTransferApp extends JFrame {
       statusLabel.setSize(200, 20);
       ImageIcon serverIcone = new ImageIcon(new ImageIcon("icones/server.png").getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
 
-      serverButton = new JButton("Démarrer le serveur",serverIcone);
+      serverButton = new JButton("Demarrer le serveur",serverIcone);
       serverButton.setBackground(white);
       serverButton.setForeground(black);
       serverButton.addActionListener(new ActionListener() {
@@ -165,14 +170,26 @@ public class FileTransferApp extends JFrame {
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
         progressBar.setVisible(false);
-
-        JLabel or = new JLabel("ou");
+        encryptImage=new JButton("Cryptage Image");
+        encryptImage.setBackground(white);
+        encryptImage.setForeground(black);
+        encryptImage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                AES_Demo d= new AES_Demo();
+                d.setVisible(true);
+            }
+        });
+      serveurPanel.setLayout(null);
+      serveurPanel.setBackground(new Color(200, 200, 255));
+      serveurPanel.setBounds(5,180,635,80);
+      serveurPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+      JLabel or = new JLabel("ou");
         or.setForeground(black);
         JLabel typeCryptage = new JLabel("Type de cryptage : AES 128");
         JLabel description = new JLabel("Description : ");
-        JLabel line1 = new JLabel("Cette Application créer par Hatem TRABELSI et Bachir SOULI qui permet de crypter et décrypter");
-        JLabel line2 = new JLabel("des fichiers médias (AES)");
-        JLabel line3 = new JLabel("Cette Application permet d'avoir la possibilité de les transférers dans le réseau local");
+        JLabel line1 = new JLabel("Cette Application creer par Hatem TRABELSI et Bachir SOULI qui permet de crypter et decrypter");
+        JLabel line2 = new JLabel("des fichiers medias (AES)");
+        JLabel line3 = new JLabel("Cette Application permet d'avoir la possibilite de les transferers dans le reseau local");
         typeCryptage.setBounds(5,5,200,25);
         description.setBounds(5,30,100,25);
         line1.setBounds(5,55,600,25);
@@ -180,38 +197,47 @@ public class FileTransferApp extends JFrame {
         line3.setBounds(5,105,600,25);
         selectedFilePathTextField.setBounds(5,140,450,30);
         chooseFileButton.setBounds(450,140,200,30);
-        ipTextField.setBounds(5,180,100,30);
-        connectButton.setBounds(100,180,150,30);
-        or.setBounds(270,180,20,30);
-        serverButton.setBounds(300,180,160,30);
-        encryptAndTransferButton.setBounds(5,230,200,30);
-        encryptButton.setBounds(5,265,200,30);
-        decryptAndSaveButton.setBounds(300,230,200,30);
-        decryptButton.setBounds(300,270,200,30);
+        ipTextField.setBounds(5,5,100,30);
+        connectButton.setBounds(100,5,150,30);
+        or.setBounds(270,5,20,30);
+        serverButton.setBounds(300,5,160,30);
+        encryptAndTransferButton.setBounds(5,40,200,30);
+
+        decryptAndSaveButton.setBounds(300,40,200,30);
+
         progressBar.setBounds(0,300,600,30);
-        statusLabel.setBounds(0,330,600,100);
-        descriptionPanel.add(typeCryptage);
+        statusLabel.setBounds(0,370,600,100);
+      encryptButton.setBounds(5,270,180,30);
+      encryptImage.setBounds(375,270,180,30);
+      decryptButton.setBounds(190,270,180,30);
+      descriptionPanel.add(typeCryptage);
       descriptionPanel.add(description);
       descriptionPanel.add(line1);
       descriptionPanel.add(line2);
       descriptionPanel.add(line3);
       add(descriptionPanel);
+      add(encryptImage);
         add(selectedFilePathTextField);
         add(chooseFileButton);
-        add(ipTextField);
-        add(or);
-        add(connectButton);
-        add(encryptAndTransferButton);
-        add(decryptAndSaveButton);
-        add(serverButton);
+      serveurPanel.add(ipTextField);
+      serveurPanel.add(or);
+      serveurPanel.add(connectButton);
+      serveurPanel.add(encryptAndTransferButton);
+      serveurPanel.add(decryptAndSaveButton);
+      serveurPanel.add(serverButton);
+
+
         add(progressBar);
         add(statusLabel);
         add(encryptButton);
         add(decryptButton);
+        add(serveurPanel);
         add(mainPanel);
         setSize(650, 400);
         setLocationRelativeTo(null);
-        setVisible(true);
+      setResizable(false);
+
+      setVisible(true);
   }
 
   
